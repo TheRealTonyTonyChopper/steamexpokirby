@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Kirbys Adventure NES</title>
+    <script src="https://unpkg.com/jsnes/dist/jsnes.min.js"></script>
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            background: black;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        canvas {
+            width: 100vw;
+            height: 100vh;
+            image-rendering: pixelated;
+        }
+    </style>
+</head>
+<body>
+
+<canvas id="nes-canvas" width="256" height="240"></canvas>
+
+<script>
+    const ROM_URL = "https://github.com/TheRealTonyTonyChopper/Kirbys-Adventure-NES/raw/refs/heads/main/kirby.nes";
+
+    const canvas = document.getElementById("nes-canvas");
+    const ctx = canvas.getContext("2d");
+    const img = ctx.getImageData(0, 0, 256, 240);
+
+    const nes = new jsnes.NES({
+        onFrame(frameBuffer) {
+            for (let i = 0; i < frameBuffer.length; i++) {
+                img.data[i] = frameBuffer[i];
+            }
+            ctx.putImageData(img, 0, 0);
+        }
+    });
+
+    fetch(ROM_URL)
+        .then(r => r.arrayBuffer())
+        .then(buf => {
+            nes.loadROM(new Uint8Array(buf));
+            setInterval(() => nes.frame(), 1000 / 60);
+        })
+        .catch(err => console.error("ROM load error:", err));
+</script>
+
+</body>
+</html>
