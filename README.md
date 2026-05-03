@@ -1,2 +1,2 @@
 https://therealtonytonychopper.github.io/steamexpokirby/
-https://https://starry.rf.gd/
+https://starry.rf.gd/
